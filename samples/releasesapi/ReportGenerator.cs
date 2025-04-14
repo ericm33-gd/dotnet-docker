@@ -7,8 +7,20 @@ namespace ReleaseReport;
 
 public static class Generator
 {
+
+
+    static MajorVersion majorVersion80 = new MajorVersion("8.0", false, "", 0, new List<PatchRelease>());
+    static MajorVersion majorVersion90 = new MajorVersion("9.0", false, "", 0, new List<PatchRelease>());
+
+    static IList<MajorVersion> theVersions = new List<MajorVersion>()
+    {
+        majorVersion80,
+        majorVersion90
+    };
+
+    
     public static async Task<Report> MakeReportAsync() =>
-        new(DateTime.Today.ToShortDateString(), await GetVersionsAsync().ToListAsync());
+        new(DateTime.Today.ToShortDateString(), theVersions); // , await GetVersionsAsync().ToListAsync());
 
     public static async IAsyncEnumerable<MajorVersion> GetVersionsAsync()
     {

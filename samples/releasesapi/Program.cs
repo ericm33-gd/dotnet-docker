@@ -1,42 +1,85 @@
+
 using System.Text.Json.Serialization;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
-var builder = WebApplication.CreateSlimBuilder(args);
-builder.Services.AddHealthChecks();
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Diagnostics;
+using ReleaseApi;
 
-builder.Services.ConfigureHttpJsonOptions(options =>
+
+namespace ReleaseApi    
 {
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+    public class Program
+    {        
+        private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-var app = builder.Build();
+        public static void Main(string[] args)
+        {
+            var app = CreateHostBuilder(args).Build();
+            app.Run();
+        }
 
-app.MapHealthChecks("/healthz");
-
-app.MapGet("/releases", async () => await ReleaseReport.Generator.MakeReportAsync());
-
-Stopwatch stopwatch = new Stopwatch();
-stopwatch.Start();
-
-Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API Begins...");
-
-long managedMemory = GC.GetTotalMemory(false);
-//managedMemory = ((managedMemory / 1024) / 1024); // Convert to MB
-
-Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Managed Memory Used (MB): " + managedMemory);
-
-Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API-StartUp Ends...");
-stopwatch.Stop();
-
-var elapsedTime = stopwatch.ElapsedMilliseconds;
-Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API-StartUp Elapsed Time: " + elapsedTime); 
-
-Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API Ends...");
-app.Run();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddNLog("nlog.config");
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
+}   
 
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.KebabCaseLower)]
-[JsonSerializable(typeof(ReportJson.Report))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-}
+
+
+
+// var builder = WebApplication.CreateSlimBuilder(args);
+// builder.Services.AddHealthChecks();
+
+// builder.Services.ConfigureHttpJsonOptions(options =>
+// {
+//     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+// });
+
+// var app = builder.Build();
+
+// app.MapHealthChecks("/healthz");
+
+// app.MapGet("/releases", async () => await ReleaseReport.Generator.MakeReportAsync());
+
+// Stopwatch stopwatch = new Stopwatch();
+// stopwatch.Start();
+
+// Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API Begins...");
+
+// long managedMemory = GC.GetTotalMemory(false);
+// //managedMemory = ((managedMemory / 1024) / 1024); // Convert to MB
+
+// Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Managed Memory Used (MB): " + managedMemory);
+
+// Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API-StartUp Ends...");
+// stopwatch.Stop();
+
+// var elapsedTime = stopwatch.ElapsedMilliseconds;
+// Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API-StartUp Elapsed Time: " + elapsedTime); 
+
+// Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " Releases-API Ends...");
+// app.Run();
+
+
+// [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.KebabCaseLower)]
+// [JsonSerializable(typeof(ReportJson.Report))]
+// internal partial class AppJsonSerializerContext : JsonSerializerContext
+// {
+// }

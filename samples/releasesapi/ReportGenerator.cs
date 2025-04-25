@@ -20,7 +20,7 @@ public static class Generator
 
     
     public static async Task<Report> MakeReportAsync() =>
-        new(DateTime.Today.ToShortDateString(), theVersions); // , await GetVersionsAsync().ToListAsync());
+        new(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString(), theVersions); // , await GetVersionsAsync().ToListAsync());
 
     public static async IAsyncEnumerable<MajorVersion> GetVersionsAsync()
     {

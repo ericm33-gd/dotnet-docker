@@ -1,0 +1,450 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+#
+# User Eric
+#
+
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+#
+# Path Handling
+#
+export JAVA_HOME=
+export JAVA_HOME='/opt/sdkman/candidates/java/current'
+
+export DOCKER_HOST_IP=
+export DOCKER_HOST_IP="172.17.0.1"
+
+export M2_DATA=
+export M2_DATA=/mnt/c/data/maven-3.x
+
+export M2_HOME=
+export M2_HOME='/opt/sdkman/candidates/maven/current'
+
+export ANT_HOME=
+export ANT_HOME=/mnt/c/apps/java/apache-ant-1.8.4
+
+#
+# GO Stuff
+#
+
+export GO_DIR=
+export GO_DIR=/mnt/c/apps/go/go-1.22.2
+
+export GOROOT=
+export GOROOT=/mnt/c/apps/go/go-1.22.2
+
+export GOBIN=
+export GOBIN=/usr/bin
+
+export GOPATH=
+export GOPATH=/mnt/c/apps/go/packages
+
+export GOPROXY=
+export GOPROXY='https://proxy.golang.org,direct'
+
+#export KIND_DIR=
+#export KIND_DIR='/mnt/c/apps/kind-0.11.1'
+
+export VAULT_DIR=
+export VAULT_DIR='/mnt/c/apps/hashicorp/vault-1.1.3'
+
+
+export HEY_DIR=
+export HEY_DIR='/mnt/c/apps/hey-0.1.4'
+
+# K8s Stuff
+
+#export KUBECONFIG=
+#export KUBECONFIG='/home/eericmanley/.kube/config'
+
+export K8_KUSTOMIZE=
+export K8_KUSTOMIZE=/mnt/c/apps/kustomize-2.0.3
+
+export K8_CUSTOM=
+export K8_CUSTOM='/mnt/c/dev2/k8/3rdParty/master/kubectx'
+
+export K8_MINIKUBE=
+#export K8_MINIKUBE=/mnt/c/apps/minikube
+export K8_MINIKUBE='/mnt/c/apps/minikube-1.34.0-0/bin'
+
+export KPACK_DIR=
+export KPACK_DIR='/opt/kpack-0.13.0/bin'
+
+export HELM_DIR=
+export HELM_DIR='/mnt/c/apps/helm-3.16.2/bin'
+
+export FLUX_DIR=
+export FLUX_DIR='/mnt/c/apps/flux-2.4.0/bin'
+
+export K9S_CLI=
+export K9S_CLI='/mnt/c/apps/k9s-v0.25.15'
+
+export HNC_VERSION=
+export HNC_VERSION='v0.9.0'
+
+export HNC_PLATFORM=
+export HNC_PLATFORM='linux_amd64'
+
+export K8_HNS_CLI=
+export K8_HNS_CLI='/mnt/c/apps/kubectl-hns-0.9.0/bin'
+
+export REPLICATED_CLI=
+export REPLICATED_CLI='/mnt/c/apps/replicated-0.84.0/bin'
+
+# Greendot Stuff
+export GITHUB_ORG=
+
+#export GITHUB_ORG='ssh://git@github.com/Green-Dot-Corporation'
+#export GITHUB_ORG='https://ericm33-gd@github.com/Green-Dot-Corporation'
+#export GITHUB_ORG='git@github.com:ericm33-gd/Green-Dot-Corporation/GBOS-DeployConfig'
+
+
+export NUGET_VOLUME=
+export NUGET_VOLUME="${HOME}/.nuget/packages"
+
+export DEV_CRT_VOLUME_PATH=
+export DEV_CRT_VOLUME_PATH='/mnt/c/dev2/config/greendot/master/GBOS-DeployConfig/local/certs'
+
+export PIVOTAL=
+export PIVOTAL=/mnt/c/apps/pivotal
+
+export TERRAFORM_HOME=
+export TERRAFORM_HOME=/mnt/c/apps/hashicorp/terraform-0.12.28
+
+export CRICTL_CLI=
+export CRICTL_CLI='/mnt/c/apps/crictl-v1.24.1/bin'
+
+export COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+
+export KUBECTX_CURRENT_FGCOLOR=$(tput setaf 6) # blue text
+export KUBECTX_CURRENT_BGCOLOR=$(tput setaf 7) # white background
+
+export SDKMAN_DIR=
+export SDKMAN_DIR='/opt/sdkman'
+
+export CARVEL_DIR=
+export CARVEL_DIR='/mnt/c/apps/carvel'
+
+# Git Stuff
+
+export GIT_PS1_SHOWCOLORHINTS=
+export GIT_PS1_SHOWCOLORHINTS='Y'
+
+# Github
+
+export GIT_TOKEN_FOR_PRS=
+
+
+# Azure Stuff
+
+# Docker Stuff
+export NO_COLOR=
+export NO_COLOR=1
+
+export H5_HOME=
+
+
+export H5_Y=
+export H5_Y=$(echo $H5_HOME | base64 --decode)
+
+
+#
+# Main PATH HERE!
+#
+
+export PATH=.:/mnt/c/dev2/sh:$JAVA_HOME/bin:$M2_HOME/bin:$CARVEL_DIR/bin:$ANT_HOME/bin:$K8_HNS_CLI:$K8_MINIKUBE:$KPACK_DIR:$HELM_DIR:$FLUX_DIR:$K9S_CLI:$REPLICATED_CLI:$TERRAFORM_HOME:$GO_DIR/bin:$GOBIN:$K8_CUSTOM:$K8_KUSTOMIZE:$PIVOTAL:$VAULT_DIR:$KIND_DIR:$HEY_DIR:$CRICTL_CLI:$SDKMAN_DIR:$PATH
+
+
+#
+# Some K8s Things.
+#
+
+export AO=' -A -o wide '
+export DY=' --dry-run=client -o yaml '
+export DR=' --dry-run=client '
+export RSN=' --restart=Never '
+export NOW=' --force --grace-period 0 '
+export OW=' -o wide '
+export OY=' -o yaml '
+
+# Refer to .kubectl_aliases
+#alias kctx='kubectl config get-contexts'
+#alias kall='kubectl get nodes,deployments.apps,services,pods,ingress $ow'
+
+
+source /mnt/c/dev2/sh/kube-ps1.sh
+
+source /mnt/c/dev2/sh/git-ps1.sh
+
+source /usr/share/bash-completion/bash_completion
+
+source <(kubectl completion bash)
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+# Debian Stuff, Disabled by MEM
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+
+# Kube Prompt
+
+KUBE_PS1_SYMBOL_USE_IMG='false'
+KUBE_PS1_NS_COLOR='yellow'
+KUBE_PS1_SYMBOL_COLOR='cyan'
+
+# K8s Only
+# PS1='\u@\h:$(kube_ps1)\>'
+
+# Git Only
+# PS1='\u@\h:$(__git_ps1)\>'
+
+# K8s + git
+PS1='\u@\h:$(kube_ps1)$(__git_ps1 " (%s)")\>'
+
+# Basic
+# PS1="\u@${HOSTNAME}:\$PWD>"
+
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# Default This
+alias ll='ls -latr'
+
+# Just Dirz
+alias dirz='ls -ld */'
+
+alias la='ls -A'
+alias l='ls -CF'
+
+#
+# My Alias
+#
+alias me='cd /mnt/c/dev2/sh'
+alias da='cd /mnt/c/dev2/azure'
+alias d2='cd /mnt/c/dev2/docker'
+alias d3='cd /mnt/c/dev2/ansible/repo1/master/repo1/docker/docker-ci-tool-stack-master'
+alias d4='cd /mnt/c/dev2/docker/eric/master/docker-ci-toolz-stack-master'
+
+alias d2em='cd /mnt/c/dev2/docker/eric/master'
+
+
+alias dbp='echo Y | docker buildx prune --all'
+alias dip='echo Y | docker image prune'
+
+
+#
+# Java ThangZ
+#
+alias dj='cd /mnt/c/dev2/java'
+alias ddn='cd /mnt/c/dev2/dotnet'
+alias dcon='cd /mnt/c/dev2/config'
+
+
+alias djvm='cd /mnt/c/dev2/java/vmware/master'
+alias djem='cd /mnt/c/dev2/java/eric/master'
+
+alias ij='cd /mnt/c/apps/java/idea-IU-242.21829.142/bin; ./idea &'
+
+
+#
+# Base-K8s
+#
+
+alias dk='cd /mnt/c/dev2/k8'
+alias dkem='cd /mnt/c/dev2/k8/eric/master'
+alias dkme='cd /mnt/c/dev2/k8/eric/master/k8-examples'
+alias dk3m='cd /mnt/c/dev2/k8/3rdParty/master'
+alias dkmk='cd /mnt/c/dev2/k8/eric/master/kodekloud'
+alias dkmc='cd /mnt/c/dev2/k8/3rdParty/master/certified-kubernetes-administrator-course'
+
+alias qjc='quotejcmd "$@"'
+alias r='replicated "$@"'
+
+#
+# GD Config:
+#
+alias dcong='cd /mnt/c/dev2/config/greendot/master/GBOS-DeployConfig'
+
+#
+# Minikube
+#
+
+alias mk='minikube'
+alias mkpl='minikube profile list'
+
+#
+# Docker
+#
+
+alias dcdn='docker-compose stop'
+alias dcup='docker-compose up 2>&1 | tee /mnt/c/data/txt/dockerComposeStartLog.txt &'
+alias di='docker images'
+alias dp='docker ps'
+alias dpa='docker ps -a'
+
+#alias dld='docker login --username=ericm24'
+
+alias dld='docker login --username=ericm24 -p $DH_Y'
+alias dlh3="docker login -u admin harbor03.aws.ericm48.net  -p $H3_Y"
+alias dlh4="docker login -u admin harbor04.azure.csp-si-tiger.net  -p $H4_Y"
+
+alias dlgd="docker login -u eericmanley re-artifactory.gdotkubenp.com -p $H5_Y"
+
+
+#
+# Git
+#
+
+alias gpot='git push --tags'
+alias gconfigme='git config --global http.sslVerify false; git config --global user.name "ericm24"; git config --global user.email "meric.manley@gmail.com"; git config --list '
+alias gconfigme2='git config --global http.sslVerify false; git config --global user.name "ericm48"; git config --global user.email "me_manley@yahoo.com"; git config --list '
+
+
+#
+# Just 'Nix
+#
+
+alias eme='env |grep $@'
+alias dgo2='du -h | sort -h'
+alias vmdt='cd /mnt/c/data/vm-data/mnt/c/data/txt'
+alias fme='cd /media/eric/KING-GREY/mnt/c/dev2/sh'
+alias fdt='cd /media/eric/KING-GREY/mnt/c/data/txt'
+alias pme='cd; . .profile'
+
+#
+# Wrapp gcode script to disable wildcard expansion, run gcode turn wildcard expansion back on..
+#
+alias gcode='set -f;gcode';gcode(){ /mnt/c/dev2/sh/gcode "$@";set +f;}
+alias sme='cd /mnt/c/dev2/java/eric/master/repo4/ShellAsset/projects/shell-project-common'
+
+alias ubuver='lsb_release -a'
+
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+#
+# Turn OFF File Globbing
+#
+
+# set -f
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+source /usr/share/bash-completion/bash_completion
+
+source <(kubectl completion bash)
+
+[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
+
+# Reset the k alias for autocompletion (both lines below).
+
+alias k='kubectl'
+complete -F __start_kubectl k
+
+source /opt/sdkman/bin/sdkman-init.sh
+
+# Try this
+sdk use java 22.0.2-librca
+
+# Add ssh-agent for git
+
+eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
+

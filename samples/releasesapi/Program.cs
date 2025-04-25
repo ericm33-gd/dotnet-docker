@@ -1,4 +1,9 @@
 
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Threading;
+
 using System.Text.Json.Serialization;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
@@ -8,38 +13,99 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Diagnostics;
 using ReleaseApi;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace ReleaseApi    
+
+namespace ReleaseApi
 {
-    public class Program
-    {        
+    [ExcludeFromCodeCoverage(Justification = "just program startup")]
+    public static class Program
+    {
         private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
-
+         
         public static void Main(string[] args)
         {
-            var app = CreateHostBuilder(args).Build();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            // load config
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+            builder.Configuration
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false)
+                .AddEnvironmentVariables($"{AppDomain.CurrentDomain.FriendlyName}:")
+                .AddJsonFile("/config/app-config.json", optional: true, reloadOnChange: true); // azure app config mounts here
+            
+            // adjust thread pool size
+            //ThreadPoolHelper.AdjustThreadPoolSize(builder.Configuration);
+
+
+            // add logging
+            builder.Services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddNLog(builder.Configuration);
+            });
+
+            // register logger
+            builder.Services.AddSingleton(Logger);
+
+            Logger.Info("ReleasesAPI-CN-StartUp Begins...");
+
+
+            var app = builder.Build();
+
+            //app.MapHealthChecks("/healthz");
+
+            app.MapGet("/releases", async () => await ReleaseReport.Generator.MakeReportAsync());
+
+
+            // Configure the HTTP request pipeline.
+            // app.UseDefaultHealthCheckUrls();
+            // app.UseSwagger();
+            // app.UseSwaggerUI();
+
+            // app.UseAuthentication();
+            // app.UseAuthorization();
+            // app.MapControllers();
+
+            // Get managed memory usage
+            long managedMemory = GC.GetTotalMemory(false);
+            Logger.Info("ReleasesAPI-CN-StartUp-ManagedMemoryUsedRaw: {managedMemory}", managedMemory);            
+            managedMemory = ((managedMemory / 1024) / 1024); // Convert to MB
+            Logger.Info("ReleasesAPI-CN-StartUp-ManagedMemoryUsedMB: {managedMemory}", managedMemory);
+            Logger.Info("ReleasesAPI-CN-StartUp-Ends...");
+
+            stopwatch.Stop();
+            var elapsedTime = stopwatch.ElapsedMilliseconds;
+
+            Logger.Info("ReleasesAPI-CN-Startup-ElapsedTime: {elapsedTime}", elapsedTime); 
+
             app.Run();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Trace);
-                    logging.AddNLog("nlog.config");
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
-}   
+}
 
+
+// using System.Text.Json.Serialization;
+// using System.Diagnostics;
+// using Microsoft.Extensions.Logging;
+// using NLog.Extensions.Logging;
+
+// using Microsoft.AspNetCore.Builder;
+// using Microsoft.Extensions.DependencyInjection;
+// using Microsoft.Extensions.Hosting;
+// using System.Text.Json;
+// using System.Text.Json.Serialization;
+// using System.Diagnostics;
+// using ReleaseApi;
 
 
 
